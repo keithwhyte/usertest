@@ -68,6 +68,36 @@ class UserController extends Controller
       );
     }
     
+    /**
+     * @Route("/delete", name="delete")
+     */
+    public function delete(Request $request)
+    {
+      $id = $request->request->get('id');
+      
+      $em = $this->getDoctrine()->getManager();
+ 
+      $user = $this->getDoctrine()
+        ->getRepository(User::class)
+        ->find($id);
+   
+      if (!$user) {
+          throw $this->createNotFoundException(
+              'Cannot delete - user does not exist'
+          );
+      } else {
+          $user->setActive(false);
+      
+          $em->persist($user);
+
+          $em->flush();
+
+          return new Response(
+              json_encode($this->getList())
+          ); 
+      }        
+    } 
+    
     private function checkUserNumbers()
     {
       if (count($this->getList()) >= 10) {

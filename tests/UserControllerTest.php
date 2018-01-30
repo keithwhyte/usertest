@@ -81,4 +81,27 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals($newUser['department'], $lastUser->department);
  
     }
+    
+    public function testItShouldDeleteANewUserCorrectly()
+    {
+        $client = static::createClient();
+      
+        $client->request('GET', '/users');
+        $response = $client->getResponse()->getContent();
+        $response = json_decode($response);
+        
+        $user = $response[0];
+
+        $client->request(
+              'POST',
+              '/delete',
+               ['id' => $user->id]
+          );
+
+          $response = $client->getResponse()->getContent();
+          $response = json_decode($response);
+
+          $this->assertEquals(4, count($response));
+
+    }
 }
