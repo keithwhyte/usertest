@@ -14,7 +14,7 @@ A server-side solution to perform CRUD operations (Create, Read, Update and Dele
 * Start up MAMP Server
 * Run a composer update (replicates part 1 of below)
 * Set up the database connection (part 2 of below)
-* Set up the test database and fixture (part 5 of below). Note the AppFixtures file has already been created
+* Set up the test database and fixture (part 5 of below). Note the AppFixtures file has already been created. You will only have to set up the test database and import the schema from the dump file
 * run tests via ./bin/phpunit
 
 ### Creation
