@@ -15,6 +15,7 @@ A server-side solution to perform CRUD operations (Create, Read, Update and Dele
 * Run a composer update (replicates part 1 of below)
 * Set up the database connection (part 2 of below)
 * Set up the test database and fixture (part 5 of below). Note the AppFixtures file has already been created. You will only have to set up the test database and import the schema from the dump file
+* start server using command php bin/console server:run
 * run tests via ./bin/phpunit
 
 ### Creation
@@ -28,6 +29,7 @@ A server-side solution to perform CRUD operations (Create, Read, Update and Dele
 * composer require --dev browser-kit;
 * composer require --dev doctrine/doctrine-fixtures-bundle;
 * composer require annotations;
+* composer req webserver;
 
 
 2. Add database config

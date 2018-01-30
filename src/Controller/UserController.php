@@ -33,9 +33,7 @@ class UserController extends Controller
           ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
       
       if (!$users) {
-          throw $this->createNotFoundException(
-              'No users found.'
-          );
+          return [];
       } else {
           return $users;
       }
