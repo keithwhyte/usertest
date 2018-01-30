@@ -45,6 +45,7 @@ class UserController extends Controller
      */
     public function add(Request $request)
     {
+      $this->validateUser($request);
       $this->checkUserNumbers();
       $this->validateDepartment($request->request->get('department'));
      
@@ -71,6 +72,13 @@ class UserController extends Controller
      */
     public function delete(Request $request)
     {
+      if ($request->request->get('id') == null)
+      {
+          throw new InvalidAdditionException(
+              'The data provided is incorrect. No id provided'
+          ); 
+      }
+      
       $id = $request->request->get('id');
       
       $em = $this->getDoctrine()->getManager();
@@ -101,6 +109,14 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
+      if ($request->request->get('id') == null)
+      {
+          throw new InvalidAdditionException(
+              'The data provided is incorrect. No id provided'
+          ); 
+      }
+      
+      $this->validateUser($request);
       $this->validateDepartment($request->request->get('department'));
       $id = $request->request->get('id');
 
@@ -157,5 +173,18 @@ class UserController extends Controller
       }
       
       return true;    
+    }
+    
+    private function validateUser($request)
+    {
+      $requestArray = $request->request->all();
+      
+      if (!array_key_exists('firstname', $requestArray) || !array_key_exists('lastname', $requestArray) || !array_key_exists('email', $requestArray) || !array_key_exists('department', $requestArray))
+      {
+        throw new InvalidAdditionException(
+                  'The data provided is incorrect'
+          );
+      }
+      
     }
 }

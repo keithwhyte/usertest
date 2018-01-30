@@ -276,4 +276,67 @@ class UserControllerTest extends WebTestCase
         $response = $client->getResponse()->getContent();
       
     }
+    
+    /**
+     * @expectedException \App\Exceptions\InvalidAdditionException
+     * @expectedExceptionMessage The data provided is incorrect
+     */
+    public function testItShouldThrowAnErrorIfAUserIsAddedAndTheDataIsntCorrect()
+    {
+        $client = static::createClient();
+
+        $newUser = [];
+        
+        $client->request(
+            'POST',
+            '/add',
+             $newUser
+        );
+        
+
+        $response = $client->getResponse()->getContent(); 
+      
+    }
+    
+    /**
+     * @expectedException \App\Exceptions\InvalidAdditionException
+     * @expectedExceptionMessage The data provided is incorrect. No id provided
+     */
+    public function testItShouldThrowAnErrorIfAUserIsDeletedAndTheDataIsntCorrect()
+    {
+        $client = static::createClient();
+
+        
+        $client->request(
+            'POST',
+            '/delete',
+            []
+        );
+        
+
+        $response = $client->getResponse()->getContent(); 
+      
+    }
+    
+    /**
+     * @expectedException \App\Exceptions\InvalidAdditionException
+     * @expectedExceptionMessage The data provided is incorrect. No id provided
+     */
+    public function testItShouldThrowAnErrorIfAUserIsUpdatedAndTheDataIsntCorrect()
+    {
+        $client = static::createClient();
+
+        
+        $client->request(
+            'POST',
+            '/update',
+            []
+        );
+        
+
+        $response = $client->getResponse()->getContent(); 
+      
+    }
+    
+    
 }
