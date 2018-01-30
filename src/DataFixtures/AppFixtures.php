@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
             $user->setFirstName('John'.$i);
             $user->setLastName('Smith'.$i);
             $user->setEmail('john.smith'.$i.'@testmail.com');
-            $user->setDepartment('Department'.$i);
+            $user->setDepartment('Department');
             $user->setActive(true);
             $manager->persist($user);
         }

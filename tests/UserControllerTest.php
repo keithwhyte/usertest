@@ -145,4 +145,135 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals($updatedUser['department'], $updatedResponseUser->department);
         
     }
+    
+    /**
+     * @expectedException \App\Exceptions\InvalidAdditionException
+     * @expectedExceptionMessage Maximum number of users reached
+     */
+    public function testItShouldThrowAnErrorIfTheMaximumNumberOfUsersHasBeenReached()
+    {
+        $client = static::createClient();
+        
+        //add 5 more users
+        for ($i = 0; $i <= 5; $i++) {
+          
+            $newUser = ['firstname' => 'Tom'.$i, 
+                        'lastname' => 'Cruise'.$i,
+                        'email' => 'mission@impossible.net'.$i,
+                        'department' => 'Test Dept - '.$i
+                    ];
+          
+            $client->request(
+                'POST',
+                '/add',
+                 $newUser
+            );
+          
+        }
+
+        $newUser = ['firstname' => 'Tom', 
+            'lastname' => 'Cruise',
+            'email' => 'mission@impossible.net',
+            'department' => 'IM force'
+        ];
+        
+        $client->request(
+            'POST',
+            '/add',
+             $newUser
+        );
+        
+
+        $response = $client->getResponse()->getContent(); 
+      
+    }
+    
+    /**
+     * @expectedException \App\Exceptions\InvalidAdditionException
+     * @expectedExceptionMessage Maximum number of users reached for department
+     */
+    public function testItShouldThrowAnErrorIfTheMaximumNumberOfUsersForADepartmentHasBeenReached()
+    {
+        $client = static::createClient();
+
+        $newUser = ['firstname' => 'Tom', 
+            'lastname' => 'Cruise',
+            'email' => 'mission@impossible.net',
+            'department' => 'Department'
+        ];
+        
+        $client->request(
+            'POST',
+            '/add',
+             $newUser
+        );
+        
+
+        $response = $client->getResponse()->getContent(); 
+      
+    }
+    
+    /**
+     * @expectedException \App\Exceptions\InvalidAdditionException
+     * @expectedExceptionMessage Maximum number of users reached for department
+     */
+    public function testItShouldThrowAnErrorIfTheMaximumNumberOfUsersForADepartmentHasBeenReachedInAnUpdate()
+    {
+        $client = static::createClient();
+      
+        $client->request('GET', '/users');
+        $response = $client->getResponse()->getContent();
+        $response = json_decode($response);
+        
+        $user = $response[0];
+        
+        $updatedUser = [
+            'id' => $user->id,
+            'firstname' => 'Tom', 
+            'lastname' => 'Cruise',
+            'email' => 'mission@impossible.net',
+            'department' => 'Department'
+        ];
+        
+        $client->request(
+            'POST',
+            '/update',
+             $updatedUser
+        );
+        
+        $response = $client->getResponse()->getContent();
+      
+    }
+    
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @expectedExceptionMessage Cannot update - user does not exist
+     */
+    public function testItShouldThrowAnErrorIfTheUserToBeUpdatedDoesntExist()
+    {
+        $client = static::createClient();
+      
+        $client->request('GET', '/users');
+        $response = $client->getResponse()->getContent();
+        $response = json_decode($response);
+        
+        $user = $response[0];
+        
+        $updatedUser = [
+            'id' => $user->id+1000,
+            'firstname' => 'Tom', 
+            'lastname' => 'Cruise',
+            'email' => 'mission@impossible.net',
+            'department' => 'IM force'
+        ];
+        
+        $client->request(
+            'POST',
+            '/update',
+             $updatedUser
+        );
+        
+        $response = $client->getResponse()->getContent();
+      
+    }
 }
