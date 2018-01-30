@@ -5,6 +5,8 @@ namespace App\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use App\Exceptions\InvalidAdditionException;
 use App\Entity\User;
 
 class UserController extends Controller
@@ -38,5 +40,59 @@ class UserController extends Controller
           return $users;
       }
       
+    }
+    
+    /**
+     * @Route("/add", name="add")
+     */
+    public function add(Request $request)
+    {
+      $this->checkUserNumbers();
+      $this->validateDepartment($request->request->get('department'));
+     
+      $em = $this->getDoctrine()->getManager();
+      
+      $user = new User();
+      $user->setFirstName($request->request->get('firstname'));
+      $user->setLastName($request->request->get('lastname'));
+      $user->setEmail($request->request->get('email'));
+      $user->setDepartment($request->request->get('department'));
+      $user->setActive(true);
+      
+      $em->persist($user);
+      
+      $em->flush();
+     
+      return new Response(
+          json_encode($this->getList())
+      );
+    }
+    
+    private function checkUserNumbers()
+    {
+      if (count($this->getList()) >= 10) {
+        
+        throw new InvalidAdditionException(
+                'Maximum number of users reached'
+        );
+      }
+    }
+    
+    private function validateDepartment($department)
+    {
+      $currentUsers = $this->getList();
+      $departmentArray = [];
+      foreach ($currentUsers as $user) {
+        $departmentArray[$user['department']][] = $user['id'];
+      }
+      
+      if (isset($departmentArray[$department]) && count($departmentArray[$department]) >= 4) 
+      {
+          throw new InvalidAdditionException(
+                  'Maximum number of users reached for department'
+          );
+      }
+      
+      return true;    
     }
 }

@@ -53,4 +53,32 @@ class UserControllerTest extends WebTestCase
         
         $this->assertEquals(5, count($response));
     }
+    
+    public function testItShouldAddANewUserCorrectly()
+    {
+        $client = static::createClient();
+
+        $newUser = ['firstname' => 'Tom', 
+            'lastname' => 'Cruise',
+            'email' => 'mission@impossible.net',
+            'department' => 'Test Department'
+        ];
+        
+        $client->request(
+            'POST',
+            '/add',
+             $newUser
+        );
+
+        $response = $client->getResponse()->getContent();
+        $response = json_decode($response);
+        $lastUser = end($response);
+        
+        $this->assertEquals(6, count($response));
+        $this->assertEquals($newUser['firstname'], $lastUser->firstName);
+        $this->assertEquals($newUser['lastname'], $lastUser->lastName);
+        $this->assertEquals($newUser['email'], $lastUser->email);
+        $this->assertEquals($newUser['department'], $lastUser->department);
+ 
+    }
 }
