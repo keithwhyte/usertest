@@ -1,40 +1,54 @@
 # User Service
 
-## Purpose
+### Purpose
 
+A server-side solution to perform CRUD operations (Create, Read, Update and Delete) on a list of users and their department.
+
+
+### Pre-requisites 
+
+- composer
+- mamp server
 
 ### Setup
-
+* Start up MAMP Server
+* Run a composer update (replicates part 1 of below)
+* Set up the database connection (part 2 of below)
+* Set up the test database and fixture (part 5 of below). Note the AppFixtures file has already been created
+* run tests via ./bin/phpunit
 
 ### Creation
 
-Run the following
-- composer create-project symfony/skeleton usertest
-- cd usertest/
-- composer require server —dev
-- composer require doctrine maker;
-- composer require --dev phpunit;
-- composer require --dev browser-kit;
-- composer require --dev doctrine/doctrine-fixtures-bundle;
-- composer require annotations;
+1. Run the following 
+* composer create-project symfony/skeleton usertest
+* cd usertest/
+* composer require server —dev
+* composer require doctrine maker;
+* composer require --dev phpunit;
+* composer require --dev browser-kit;
+* composer require --dev doctrine/doctrine-fixtures-bundle;
+* composer require annotations;
 
-Add database config
+
+2. Add database config
 - Change the DATABASE_URL to your production database in the .env file 
     DATABASE_URL=mysql://root:root@localhost:3306/usertest
 
-Generate the database
+
+3. Generate the database
 - php bin/console doctrine:database:create
 - php bin/console make:entity User
 
-Add fields to generated Entity
 
+4. Add fields to generated Entity
 Generate database information for table
 - php bin/console doctrine:migrations:diff
 - php bin/console doctrine:migrations:migrate
 
 Note, the 2nd command will ask you to confirm table creation.
 
-Create App Fixtures
+
+5. Create App Fixtures
 - create fixtures file AppFixtures in src/DataFixtures/AppFixtures
 - add test database config to phpunit.xml.dist
   <env name="DATABASE_URL" value="mysql://root:root@localhost:3306/user_test" />
@@ -47,12 +61,7 @@ Create App Fixtures
 
 Note - some versions of mysql dump command add unnecessary comments to the dump.sql. It needs to be removed before it will run successfully.
 
-Create controllers
+
+6. Create controllers
 - composer require annotations
 - php bin/console make:controller UserController
-
-
-### Pre-requisites 
-
-- composer
-- mamp server
