@@ -37,7 +37,7 @@ Note, the 2nd command will ask you to confirm table creation.
 Create App Fixtures
 - create fixtures file AppFixtures in src/DataFixtures/AppFixtures
 - add test database config to phpunit.xml.dist
-  <env name="DATABASE_URL" value="mysql://root:root@localhost:3306/9xb_test" />
+  <env name="DATABASE_URL" value="mysql://root:root@localhost:3306/user_test" />
 - generate schema information for test
   php bin/console doctrine:schema:create --dump-sql > dump.sql
 - create test schema
