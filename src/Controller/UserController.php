@@ -98,6 +98,41 @@ class UserController extends Controller
       }        
     } 
     
+    /**
+     * @Route("/update", name="update")
+     */
+    public function update(Request $request)
+    {
+      $this->validateDepartment($request->request->get('department'));
+      $id = $request->request->get('id');
+
+      $em = $this->getDoctrine()->getManager();
+ 
+      $user = $this->getDoctrine()
+        ->getRepository(User::class)
+        ->find($id);
+   
+      if (!$user) {
+          throw $this->createNotFoundException(
+              'Cannot update - user does not exist'
+          );
+      } else {
+          $user->setFirstName($request->request->get('firstname'));
+          $user->setLastName($request->request->get('lastname'));
+          $user->setEmail($request->request->get('email'));
+          $user->setDepartment($request->request->get('department'));
+      
+          $em->persist($user);
+
+          $em->flush();
+
+          return new Response(
+              json_encode($this->getList())
+          ); 
+      }
+      
+    }
+    
     private function checkUserNumbers()
     {
       if (count($this->getList()) >= 10) {

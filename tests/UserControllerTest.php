@@ -104,4 +104,45 @@ class UserControllerTest extends WebTestCase
           $this->assertEquals(4, count($response));
 
     }
+    
+    public function testItShouldUpdateTheUserCorrectly()
+    {
+        $client = static::createClient();
+      
+        $client->request('GET', '/users');
+        $response = $client->getResponse()->getContent();
+        $response = json_decode($response);
+        
+        $user = $response[0];
+        
+        $updatedUser = [
+            'id' => $user->id,
+            'firstname' => 'Tom', 
+            'lastname' => 'Cruise',
+            'email' => 'mission@impossible.net',
+            'department' => 'IM force'
+        ];
+        
+        $client->request(
+            'POST',
+            '/update',
+             $updatedUser
+        );
+        
+        $response = $client->getResponse()->getContent();
+        $response = json_decode($response);
+        
+        
+        foreach ($response as $responseUser) {
+          if ($user->id == $responseUser->id) {
+              $updatedResponseUser = $responseUser;
+          }
+        }
+        
+        $this->assertEquals($updatedUser['firstname'], $updatedResponseUser->firstName);
+        $this->assertEquals($updatedUser['lastname'], $updatedResponseUser->lastName);
+        $this->assertEquals($updatedUser['email'], $updatedResponseUser->email);
+        $this->assertEquals($updatedUser['department'], $updatedResponseUser->department);
+        
+    }
 }
